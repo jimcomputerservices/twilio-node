@@ -21,6 +21,7 @@ const serialize = require("../../../base/serialize");
 import { isValidPathParam } from "../../../base/utility";
 import { AlphaSenderListInstance } from "./service/alphaSender";
 import { ChannelSenderListInstance } from "./service/channelSender";
+import { DestinationAlphaSenderListInstance } from "./service/destinationAlphaSender";
 import { PhoneNumberListInstance } from "./service/phoneNumber";
 import { ShortCodeListInstance } from "./service/shortCode";
 import { UsAppToPersonListInstance } from "./service/usAppToPerson";
@@ -56,7 +57,7 @@ export interface ServiceContextUpdateOptions {
   fallbackToLongCode?: boolean;
   /** Whether to enable [Area Code Geomatch](https://www.twilio.com/docs/messaging/services#area-code-geomatch) on the Service Instance. */
   areaCodeGeomatch?: boolean;
-  /** How long, in seconds, messages sent from the Service are valid. Can be an integer from `1` to `14,400`. */
+  /** How long, in seconds, messages sent from the Service are valid. Can be an integer from `1` to `14,400`. Default value is `14,400`. */
   validityPeriod?: number;
   /** Reserved. */
   synchronousValidation?: boolean;
@@ -94,7 +95,7 @@ export interface ServiceListInstanceCreateOptions {
   fallbackToLongCode?: boolean;
   /** Whether to enable [Area Code Geomatch](https://www.twilio.com/docs/messaging/services#area-code-geomatch) on the Service Instance. */
   areaCodeGeomatch?: boolean;
-  /** How long, in seconds, messages sent from the Service are valid. Can be an integer from `1` to `14,400`. */
+  /** How long, in seconds, messages sent from the Service are valid. Can be an integer from `1` to `14,400`. Default value is `14,400`. */
   validityPeriod?: number;
   /** Reserved. */
   synchronousValidation?: boolean;
@@ -142,6 +143,7 @@ export interface ServiceListInstancePageOptions {
 export interface ServiceContext {
   alphaSenders: AlphaSenderListInstance;
   channelSenders: ChannelSenderListInstance;
+  destinationAlphaSenders: DestinationAlphaSenderListInstance;
   phoneNumbers: PhoneNumberListInstance;
   shortCodes: ShortCodeListInstance;
   usAppToPerson: UsAppToPersonListInstance;
@@ -209,6 +211,7 @@ export class ServiceContextImpl implements ServiceContext {
 
   protected _alphaSenders?: AlphaSenderListInstance;
   protected _channelSenders?: ChannelSenderListInstance;
+  protected _destinationAlphaSenders?: DestinationAlphaSenderListInstance;
   protected _phoneNumbers?: PhoneNumberListInstance;
   protected _shortCodes?: ShortCodeListInstance;
   protected _usAppToPerson?: UsAppToPersonListInstance;
@@ -235,6 +238,13 @@ export class ServiceContextImpl implements ServiceContext {
       this._channelSenders ||
       ChannelSenderListInstance(this._version, this._solution.sid);
     return this._channelSenders;
+  }
+
+  get destinationAlphaSenders(): DestinationAlphaSenderListInstance {
+    this._destinationAlphaSenders =
+      this._destinationAlphaSenders ||
+      DestinationAlphaSenderListInstance(this._version, this._solution.sid);
+    return this._destinationAlphaSenders;
   }
 
   get phoneNumbers(): PhoneNumberListInstance {
@@ -268,11 +278,14 @@ export class ServiceContextImpl implements ServiceContext {
   remove(
     callback?: (error: Error | null, item?: boolean) => any
   ): Promise<boolean> {
+    const headers: any = {};
+
     const instance = this;
     let operationVersion = instance._version,
       operationPromise = operationVersion.remove({
         uri: instance._uri,
         method: "delete",
+        headers,
       });
 
     operationPromise = instance._version.setPromiseCallback(
@@ -285,11 +298,15 @@ export class ServiceContextImpl implements ServiceContext {
   fetch(
     callback?: (error: Error | null, item?: ServiceInstance) => any
   ): Promise<ServiceInstance> {
+    const headers: any = {};
+    headers["Accept"] = "application/json";
+
     const instance = this;
     let operationVersion = instance._version,
       operationPromise = operationVersion.fetch({
         uri: instance._uri,
         method: "get",
+        headers,
       });
 
     operationPromise = operationPromise.then(
@@ -357,6 +374,7 @@ export class ServiceContextImpl implements ServiceContext {
 
     const headers: any = {};
     headers["Content-Type"] = "application/x-www-form-urlencoded";
+    headers["Accept"] = "application/json";
 
     const instance = this;
     let operationVersion = instance._version,
@@ -521,7 +539,7 @@ export class ServiceInstance {
    */
   synchronousValidation: boolean;
   /**
-   * How long, in seconds, messages sent from the Service are valid. Can be an integer from `1` to `14,400`.
+   * How long, in seconds, messages sent from the Service are valid. Can be an integer from `1` to `14,400`. Default value is `14,400`.
    */
   validityPeriod: number;
   /**
@@ -620,6 +638,13 @@ export class ServiceInstance {
    */
   channelSenders(): ChannelSenderListInstance {
     return this._proxy.channelSenders;
+  }
+
+  /**
+   * Access the destinationAlphaSenders.
+   */
+  destinationAlphaSenders(): DestinationAlphaSenderListInstance {
+    return this._proxy.destinationAlphaSenders;
   }
 
   /**
@@ -852,6 +877,7 @@ export function ServiceListInstance(version: V1): ServiceListInstance {
 
     const headers: any = {};
     headers["Content-Type"] = "application/x-www-form-urlencoded";
+    headers["Accept"] = "application/json";
 
     let operationVersion = version,
       operationPromise = operationVersion.create({
@@ -893,6 +919,7 @@ export function ServiceListInstance(version: V1): ServiceListInstance {
     if (params.pageToken !== undefined) data["PageToken"] = params.pageToken;
 
     const headers: any = {};
+    headers["Accept"] = "application/json";
 
     let operationVersion = version,
       operationPromise = operationVersion.page({

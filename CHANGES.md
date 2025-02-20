@@ -1,6 +1,80 @@
 twilio-node changelog
 =====================
 
+[2025-02-11] Version 5.4.4
+--------------------------
+**Library - Chore**
+- [PR #1070](https://github.com/twilio/twilio-node/pull/1070): update axios version. Thanks to [@manisha1997](https://github.com/manisha1997)!
+- [PR #1071](https://github.com/twilio/twilio-node/pull/1071): update readme to include node 22 in supported versions. Thanks to [@manisha1997](https://github.com/manisha1997)!
+
+**Api**
+- Change downstream url and change media type for file `base/api/v2010/validation_request.json`.
+
+**Intelligence**
+- Add json_results for Generative JSON operator results
+
+**Messaging**
+- Add DestinationAlphaSender API to support Country-Specific Alpha Senders
+
+**Video**
+- Change codec type from enum to case-insensitive enum in recording and room_recording apis
+
+
+[2025-01-28] Version 5.4.3
+--------------------------
+**Library - Fix**
+- [PR #1061](https://github.com/twilio/twilio-node/pull/1061): validate Twilio signatures with escaped and unescaped query string values fixes #1059. Thanks to [@leon19](https://github.com/leon19)!
+
+**Api**
+- Add open-api file tag to `conference/call recordings` and `recording_transcriptions`.
+
+**Events**
+- Add support for subaccount subscriptions (beta)
+
+**Insights**
+- add new region to conference APIs
+
+**Lookups**
+- Add new `parnter_sub_id` query parameter to the lookup request
+
+
+[2025-01-13] Version 5.4.2
+--------------------------
+**Messaging**
+- Adds validity period Default value in service resource documentation
+
+
+[2025-01-09] Version 5.4.1
+--------------------------
+**Numbers**
+- Change beta feature flag to use v2/BulkHostedNumberOrders
+
+
+[2024-12-12] Version 5.4.0
+--------------------------
+**Library - Chore**
+- [PR #1058](https://github.com/twilio/twilio-node/pull/1058): add v22 support. Thanks to [@manisha1997](https://github.com/manisha1997)!
+
+**Library - Feature**
+- [PR #1057](https://github.com/twilio/twilio-node/pull/1057): add support for OAuth and Orgs API. Thanks to [@tiwarishubham635](https://github.com/tiwarishubham635)!
+
+
+[2024-12-05] Version 5.3.7
+--------------------------
+**Api**
+- Add optional parameter `intelligence_service` to `transcription`
+- Updated `phone_number_sid` to be populated for sip trunking terminating calls.
+
+**Numbers**
+- Add Update Hosted Number Order V2 API endpoint
+- Update Port in docs
+
+**Twiml**
+- Add optional parameter `intelligence_service` to `<Transcription>`
+- Add support for new `<ConversationRelay>` and `<Assistant>` noun
+- Add `events` attribute to `<Dial>` verb
+
+
 [2024-11-15] Version 5.3.6
 --------------------------
 **Library - Chore**

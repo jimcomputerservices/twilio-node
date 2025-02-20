@@ -65,6 +65,8 @@ export interface TranscriptionListInstanceCreateOptions {
   hints?: string;
   /** The provider will add punctuation to recognition result */
   enableAutomaticPunctuation?: boolean;
+  /** The SID of the [Voice Intelligence Service](https://www.twilio.com/docs/voice/intelligence/api/service-resource) for persisting transcripts and running post-call Language Operators . */
+  intelligenceService?: string;
 }
 
 export interface TranscriptionContext {
@@ -138,6 +140,7 @@ export class TranscriptionContextImpl implements TranscriptionContext {
 
     const headers: any = {};
     headers["Content-Type"] = "application/x-www-form-urlencoded";
+    headers["Accept"] = "application/json";
 
     const instance = this;
     let operationVersion = instance._version,
@@ -397,9 +400,12 @@ export function TranscriptionListInstance(
       data["EnableAutomaticPunctuation"] = serialize.bool(
         params["enableAutomaticPunctuation"]
       );
+    if (params["intelligenceService"] !== undefined)
+      data["IntelligenceService"] = params["intelligenceService"];
 
     const headers: any = {};
     headers["Content-Type"] = "application/x-www-form-urlencoded";
+    headers["Accept"] = "application/json";
 
     let operationVersion = version,
       operationPromise = operationVersion.create({

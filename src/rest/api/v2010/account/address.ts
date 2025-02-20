@@ -25,7 +25,7 @@ import { DependentPhoneNumberListInstance } from "./address/dependentPhoneNumber
  * Options to pass to update a AddressInstance
  */
 export interface AddressContextUpdateOptions {
-  /** A descriptive string that you create to describe the address. It can be up to 64 characters long. */
+  /** A descriptive string that you create to describe the new address. It can be up to 64 characters long for Regulatory Compliance addresses and 32 characters long for Emergency addresses. */
   friendlyName?: string;
   /** The name to associate with the address. */
   customerName?: string;
@@ -217,11 +217,14 @@ export class AddressContextImpl implements AddressContext {
   remove(
     callback?: (error: Error | null, item?: boolean) => any
   ): Promise<boolean> {
+    const headers: any = {};
+
     const instance = this;
     let operationVersion = instance._version,
       operationPromise = operationVersion.remove({
         uri: instance._uri,
         method: "delete",
+        headers,
       });
 
     operationPromise = instance._version.setPromiseCallback(
@@ -234,11 +237,15 @@ export class AddressContextImpl implements AddressContext {
   fetch(
     callback?: (error: Error | null, item?: AddressInstance) => any
   ): Promise<AddressInstance> {
+    const headers: any = {};
+    headers["Accept"] = "application/json";
+
     const instance = this;
     let operationVersion = instance._version,
       operationPromise = operationVersion.fetch({
         uri: instance._uri,
         method: "get",
+        headers,
       });
 
     operationPromise = operationPromise.then(
@@ -291,6 +298,7 @@ export class AddressContextImpl implements AddressContext {
 
     const headers: any = {};
     headers["Content-Type"] = "application/x-www-form-urlencoded";
+    headers["Accept"] = "application/json";
 
     const instance = this;
     let operationVersion = instance._version,
@@ -733,6 +741,7 @@ export function AddressListInstance(
 
     const headers: any = {};
     headers["Content-Type"] = "application/x-www-form-urlencoded";
+    headers["Accept"] = "application/json";
 
     let operationVersion = version,
       operationPromise = operationVersion.create({
@@ -785,6 +794,7 @@ export function AddressListInstance(
     if (params.pageToken !== undefined) data["PageToken"] = params.pageToken;
 
     const headers: any = {};
+    headers["Accept"] = "application/json";
 
     let operationVersion = version,
       operationPromise = operationVersion.page({

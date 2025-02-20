@@ -39,7 +39,12 @@ export type CallSummariesCallState =
   | "answered"
   | "undialed";
 
-export type CallSummariesCallType = "carrier" | "sip" | "trunking" | "client";
+export type CallSummariesCallType =
+  | "carrier"
+  | "sip"
+  | "trunking"
+  | "client"
+  | "whatsapp";
 
 export type CallSummariesProcessingState = "complete" | "partial";
 
@@ -460,6 +465,7 @@ export function CallSummariesListInstance(
     if (params.pageToken !== undefined) data["PageToken"] = params.pageToken;
 
     const headers: any = {};
+    headers["Accept"] = "application/json";
 
     let operationVersion = version,
       operationPromise = operationVersion.page({
